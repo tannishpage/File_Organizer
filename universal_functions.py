@@ -24,6 +24,15 @@ def new_extentions(new_list, configFile=path):
     else:
         confile.close()
 
+def sub_folder_create(folders):# This function is to solve Issue #3 opened on GitHub
+    folder_path = []
+    for x in folders:
+        folder_path.append(x)
+        try:
+            os.mkdir("/".join(folder_path))
+        except FileExistsError:
+            continue
+
 def makeFolder(folder_list):
     for folder in folder_list:
         try:
@@ -31,8 +40,7 @@ def makeFolder(folder_list):
         except FileExistsError:
             continue
         except FileNotFoundError:
-            os.mkdir(folder.split("/")[0])
-            os.mkdir(folder)
+            sub_folder_create(folder.split("/"))
 
 def Cp(fname, destination, sorting_dir):
     fileOriginal = open(fname, "rb")
