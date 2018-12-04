@@ -1,6 +1,7 @@
 import custom_sorter as cs
 import default_sorter as ds
 import universal_functions as uf
+import music_sorter as ms
 import os
 import sys
 
@@ -11,16 +12,20 @@ import sys
 #-f : Config File, if left empty will use default sorter
 #-dir: sort directory if left empty will not run
 #-s: will sleep the computer after sorting finishes
-#-m: Sorter designed for music sorting
+#-m: Sorter designed for music sorting (in testing)
 
-arg_lables = ['-f', '-dir', '-s']
+arg_lables = ['-f', '-dir', '-s', '-m']
 args = sys.argv
 argument_list = []
 sleep = False
+music = False
 for arg in arg_lables:
     if arg in args:
         if arg == '-s':
             sleep = True
+            continue
+        if arg == '-m':
+            music = True
             continue
         argument_list.append(args[args.index(arg)+1])
     else:
@@ -33,10 +38,14 @@ if argument_list[1] == '':#Checks for change of directory
 
 else:
     if argument_list[0] == '': #Loads config file
-        sortingConfig, cfg_dir = uf.initiation()
         sorting_dir = argument_list[1]
-        os.chdir(sorting_dir)
-        ds.sorting(sortingConfig, cfg_dir, sorting_dir)#starts sorting
+        if music:
+            os.chdir(sorting_dir)
+            ms.musicSortingMetadata(sorting_dir)
+        else:
+            sortingConfig, cfg_dir = uf.initiation()
+            os.chdir(sorting_dir)
+            ds.sorting(sortingConfig, cfg_dir, sorting_dir)#starts sorting
     else:
         sortingConfig, cfg_dir = uf.initiation(argument_list[0])
         sorting_dir = argument_list[1]
@@ -51,4 +60,3 @@ if sleep:
         os.system("shutdown -s -t 0")
 else:
     pass
-    
